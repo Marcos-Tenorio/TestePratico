@@ -8,7 +8,7 @@ Projeto para gerenciamento de **clientes** com integração de **beneficiários*
 ## 🛠 Tecnologias Utilizadas
 - **Backend:** .NET Framework 4.8, MVC, BLL/DAL/DML  
 - **Frontend:** jQuery, jTable, AJAX  
-- **Banco de Dados:** SQLite (local)  
+- **Banco de Dados:** SQL Server (local)  
 - **IDE recomendada:** Visual Studio (com suporte ao .NET Framework 4.8)
 
 ---
