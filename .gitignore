@@ -23,11 +23,6 @@ bld/
 [Ll]og/
 [Ll]ogs/
 
-# .NET Core
-project.lock.json
-project.fragment.lock.json
-artifacts/
-
 # ASP.NET Scaffolding
 ScaffoldingReadMe.txt
 
@@ -43,6 +38,19 @@ CodeCoverage/
 
 # MSBuild Binary and Structured Log
 *.binlog
+
+#Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# NuGet Packages
+*.nupkg
+# NuGet Symbol Packages
+*.snupkg
+packages/
 
 # MSTest test Results
 [Tt]est[Rr]esult*/
