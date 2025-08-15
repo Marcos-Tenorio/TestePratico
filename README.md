@@ -34,8 +34,8 @@ Para executar o projeto corretamente, instale o **Visual Studio** com as seguint
 
 ## 🚀 Instalação e Configuração
 1. Clone o repositório:
-   ```bash
-   git clone <URL_DO_REPOSITORIO>
+   git bash:
+   git clone https://github.com/Marcos-Tenorio/TestePratico.git
 2. Abra a solução no Visual Studio.
 3. Restaure os pacotes NuGet.
 4. Compile e execute o projeto (F5 ou Ctrl + F5).
