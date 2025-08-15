@@ -1,0 +1,319 @@
+﻿@model WebAtividadeEntrevista.Models.ClienteModel
+
+<form id="formCadastro" method="post">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="Nome">Nome:</label>
+                <input required="required" type="text" class="form-control" id="Nome" value="@ViewBag.Nome" name="Nome" placeholder="Ex.: João" maxlength="50">
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="Sobrenome">Sobrenome:</label>
+                <input required="required" type="text" class="form-control" id="Sobrenome" value="@ViewBag.Sobrenome" name="Sobrenome" placeholder="Ex.: da Silva" maxlength="255">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="CPF">CPF:</label>
+                <input type="text" class="form-control" id="CPF" value="@ViewBag.CPF" 
+             name="CPF" placeholder="Ex.: 999.999.999-99" maxlength="14" onblur="formatCPF(this)">
+                <div id="cpfValidationMessage" style="color: red;"></div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="Nacionalidade">Nacionalidade:</label>
+                <input required="required" type="text" class="form-control" id="Nacionalidade" value="@ViewBag.Nacionalidade" name="Nacionalidade" placeholder="Ex.: brasileira" maxlength="50">
+            </div>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="CEP">CEP:</label>
+                <input required="required" type="text" class="form-control" id="CEP" value="@ViewBag.CEP" name="CEP" placeholder="Ex.: 01011-100" maxlength="9" onblur="formatCEP(this)">
+            </div>
+
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="Estado">Estado:</label>
+                <select required="required" id="Estado" class="form-control" name="Estado">
+                    <option value="">Selecione</option>
+                    <option value="SP" @(ViewBag.Estado == "SP" ? "selected" : "")>São Paulo</option>
+                    <option value="PE" @(ViewBag.Estado == "PE" ? "selected" : "")>Pernambuco</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="Cidade">Cidade:</label>
+                <input required="required" type="text" class="form-control" id="Cidade" value="@ViewBag.Cidade" name="Cidade" maxlength="50" placeholder="Ex.: São Paulo">
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label for="Logradouro">Logradouro:</label>
+                <input required="required" type="text" class="form-control" id="Logradouro" value="@ViewBag.Logradouro" name="Logradouro" placeholder="Ex.: Rua Boa Vista 253" maxlength="500">
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="Email">E-mail:</label>
+                <input required="required" type="text" class="form-control" id="Email" value="@ViewBag.Email" name="Email" placeholder="Ex.: email@email.com" maxlength="2079">
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="Telefone">Telefone:</label>
+                <input required="required" type="tel" class="form-control" id="Telefone" value="@ViewBag.Telefone" name="Telefone" placeholder="Ex.: (11) 92020-3030" maxlength="15" onblur="formatTel(this)">
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="container">
+            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#myModal">
+                Beneficiários
+            </button>
+
+        </div>
+        <div class="col-md-12">
+            <div class="pull-right">
+                <button type="submit" class="btn btn-sm btn-success">Salvar</button>
+            </div>
+            <div class="pull-right">
+                @Html.ActionLink("Voltar", "Index", "Cliente", new { }, new { @class = "btn btn-sm btn-danger" })
+            </div>
+        </div>
+    </div>
+</form>
+
+@{
+    List<FI.AtividadeEntrevista.DML.Beneficiario> listaBenef = new List<FI.AtividadeEntrevista.DML.Beneficiario>();
+    List<FI.AtividadeEntrevista.DML.Beneficiario> listaBeneficiarios = new List<FI.AtividadeEntrevista.DML.Beneficiario>();
+    List<FI.AtividadeEntrevista.DML.Cliente> listaCliente = new List<FI.AtividadeEntrevista.DML.Cliente>();
+
+
+    TempData["listaBenef"] = listaBenef;
+
+
+    if (Model != null && Model.ListaBenef != null && Model.ListaBenef.Count > 0)
+    {
+        listaBeneficiarios = Model.ListaBenef;
+        TempData["listaBenef"] = Model.ListaBenef;
+
+
+    }
+
+}
+
+<!-- Popup Beneficiarios Inicio -->
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Beneficiários</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row" style="height:100px;">
+                    <form id="formBenef" class="form-group" method="post">
+                        <div class="col-sm-4">
+                            <label for="CPF">CPF:</label>
+                            <input type="text" class="form-control" id="CPFBenef" name="CPF" placeholder="Ex.: 999.999.999-99" maxlength="14" onblur="formatCPF(this)">
+                            <div id="cpfBenefValidationMessage" style="color: red;"></div>
+                        </div>
+                        <div class="col-sm-6">
+                            <label for="Nome">Nome:</label>
+                            <input type="text" class="form-control" id="NomeBenef" name="Nome" placeholder="Ex.: João da Silva" maxlength="30">
+                        </div>
+                        <div class="col-sm-2">
+                            <button id="incluirBenef" class="btn btn-primary" style="margin-top: 25px;" type="button">Incluir</button>
+                        </div>
+                        <script>
+
+                        </script>
+                    </form>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">CPF</th>
+                                <th scope="col">Nome</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in listaBeneficiarios)
+                            {
+                                <tr>
+                                    <td>@item.CPF</td>
+                                    <td>@item.Nome</td>
+                                    <td align="right">
+                                        <a id="altBenef" class="btn btn-sm btn-primary">Alterar</a>
+                                        <a id="excBenef" class="btn btn-sm btn-primary">Excluir</a>
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Popup Beneficiarios Fim -->
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+
+
+
+
+<script>
+
+
+
+
+
+    $(document).ready(function () {
+        $("#CPFBenef").on("blur", function () {
+            var cpf = $(this).val();
+
+            $.ajax({
+                url: "@Url.Action("ValidaCPFDigVeri", "Cliente")",
+                type: "GET",
+                data: { cpf: cpf },
+                success: function (isValid) {
+                    if (!isValid) {
+                        $("#cpfBenefValidationMessage").text("CPF inválido.");
+                        $("#CPFBenef").val("");
+                    }
+                    else { $("#cpfBenefValidationMessage").text("");}
+
+                }
+            });
+        });
+    });
+
+
+
+
+    $("#incluirBenef").click(function () {
+            var cpf = $("#CPFBenef").val();
+            var nome = $("#NomeBenef").val();
+
+
+                        $.ajax({
+                url: "@Url.Action("AdicionarBeneficiario", "Cliente")",
+                type: "POST",
+                data: { cpf: cpf, nome: nome },
+                success: function (data) {
+                    if (data.success) {
+
+                        var novalinha = $("<tr>");
+                        novalinha.append("<td>" + data.cpf + "</td>");
+                        novalinha.append("<td>" + data.nome + "</td>");
+                        novalinha.append('<td align="right">' +
+                                      '<a id="altBenef" class="btn btn-sm btn-primary">Alterar</a>' +
+                                      '<a id="excBenef" class="btn btn-sm btn-primary">Excluir</a>' +
+                                      '</td>');
+                        $("tbody").append(novalinha);
+
+                        $("#CPFBenef").val("");
+                        $("#NomeBenef").val("");
+                    }
+                    else { $("#cpfBenefValidationMessage").text("CPF já cadastrado."); }
+                }
+            });
+
+
+
+
+     });
+
+     $(document).ready(function () {
+    $("#CPF").on("blur", function () {
+        var cpf = $(this).val();
+
+        $.ajax({
+            url: "@Url.Action("ValidaCPFDigVeri", "Cliente")",
+            type: "GET",
+            data: { cpf: cpf },
+            success: function (isValid) {
+                if (!isValid) {
+                    $("#cpfValidationMessage").text("CPF inválido.");
+                    $("#CPF").val("");
+                }
+                else { $("#cpfValidationMessage").text(""); }
+
+            }
+        });
+    });
+});
+
+
+
+     $(document).on("click", "#altBenef", function () {
+        var row = $(this).closest("tr");
+        var cpf = row.find("td:eq(0)").text();
+        var nome = row.find("td:eq(1)").text();
+
+        $("#CPFBenef").val(cpf);
+        $("#NomeBenef").val(nome);
+
+         $.ajax({
+        url: "@Url.Action("ExcluirBeneficiario", "Cliente")",
+        type: "POST",
+        data: { cpf: cpf },
+        success: function (data) {
+            if (data.success) {
+                row.remove();
+
+            }
+        }
+    });
+
+    });
+
+
+
+    $(document).on("click", "#excBenef", function () {
+    var row = $(this).closest("tr");
+    var cpf = row.find("td:eq(0)").text();
+
+    $.ajax({
+        url: "@Url.Action("ExcluirBeneficiario", "Cliente")",
+        type: "POST",
+        data: { cpf: cpf },
+        success: function (data) {
+            if (data.success) {
+                row.remove();
+
+            }
+        }
+    });
+    });
+</script>
+

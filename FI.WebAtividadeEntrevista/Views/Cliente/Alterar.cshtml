@@ -1,0 +1,14 @@
+﻿@{
+    ViewBag.Title = "Alterar Cliente";
+}
+@section scripts{
+    <script>
+         var urlAlterarCliente = '@Url.Action("Alterar", "Cliente")';
+         var urlExcluirBenef = '@Url.Action("ExcluirBeneficiario", "Cliente")';
+         var obj = @Html.Raw(Json.Encode(Model));
+         var urlRetorno = '@Url.Action("Index", "Cliente")';
+    </script>
+    @Scripts.Render("~/bundles/altClientes")
+}
+<h2>@Html.Raw(ViewBag.Title)</h2>
+@Html.Partial("Forms")
